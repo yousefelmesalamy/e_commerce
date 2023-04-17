@@ -180,9 +180,15 @@ class Cart_detail (models.Model):
         return self.products.price
 
 
+    def cart_owner_name(self):
+        return self.cart_owner.user.username
+
+
 
 class Order (models.Model):
     cart = models.ForeignKey(Cart_Owner, on_delete=models.CASCADE)
+
+
 
     def num_of_products(self):
         return self.cart.cart_detail_set.count()
@@ -194,10 +200,8 @@ class Order (models.Model):
         return "{} $" .format(total_cost)
 
     def deliver_to(self):
-        user_country = self.cart.user.country
+        user_country = self.cart.user.get_country_display()
         return user_country
-    # def get_products(self):
-    #     return ",".join([str(p) for p in self.])
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):

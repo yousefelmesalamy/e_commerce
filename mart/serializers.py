@@ -48,9 +48,13 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    stock_status = serializers.SerializerMethodField()
     class Meta:
         model = Products
-        fields = '__all__'
+        fields = ['id', 'name', 'price', 'condition', 'description', 'qty', 'barcode', 'date_of_entry', 'valid_to', 'expired', 'stock_status', 'image']
+
+    def get_stock_status(self, obj):
+        return obj.stock()
 
         def validate_product(self, value):
             if users.objects.filter(name=value).exists():
@@ -58,19 +62,40 @@ class ProductSerializer(serializers.ModelSerializer):
             return value
 
 
-class CartSerializer(serializers.ModelSerializer):
+class CartOwnerSerializer(serializers.ModelSerializer):
+    username=serializers.CharField(source='user.username')
     class Meta:
         model = Cart_Owner
-        fields = '__all__'
+        fields = ['id', 'username']
 
 
 class Cart_detailSerializer(serializers.ModelSerializer):
+    coast_of_products = serializers.SerializerMethodField()
+    product_name = serializers.CharField(source='products.name')
+    cart_owner = serializers.CharField(source='cart_owner.user.username')
+
     class Meta:
         model = Cart_detail
-        fields = "__all__"
+        fields = ['product_name', 'cart_owner', 'coast_of_products']
+
+    def get_coast_of_products(self,obj):
+        return obj.coast_of_product()
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    cart_owner = serializers.CharField(source='cart.user.username')
+    num_of_products = serializers.SerializerMethodField()
+    coast_of_products = serializers.SerializerMethodField()
+    deliver_to = serializers.SerializerMethodField()
     class Meta:
         model = Order
-        fields = "__all__"
+        fields = ['cart_owner', 'num_of_products', 'coast_of_products', 'deliver_to']
+
+    def get_num_of_products(self,obj):
+        return obj.num_of_products()
+
+    def get_coast_of_products(self,obj):
+        return obj.coast_of_products()
+
+    def get_deliver_to(self,obj):
+        return obj.deliver_to()

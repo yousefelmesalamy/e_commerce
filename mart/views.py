@@ -162,11 +162,11 @@ class Cart_Owner_list_CBV(APIView):
 
     def get(self,request):
         cart=Cart_Owner.objects.all()
-        serializer=CartSerializer(cart,many=True)
+        serializer=CartOwnerSerializer(cart,many=True)
         return Response(serializer.data)
 
     def post(self,request):
-        serializer=CartSerializer(data=request.data)
+        serializer=CartOwnerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
@@ -184,12 +184,12 @@ class Cart_Owner_pk_CBV(APIView):
 
     def get(self,request,pk):
         cart=self.get_object(pk)
-        serializer=CartSerializer(cart)
+        serializer=CartOwnerSerializer(cart)
         return Response(serializer.data)
 
     def put(self, request, pk):
         cart=self.get_object(pk)
-        serializer=CartSerializer(cart,data=request.data)
+        serializer=CartOwnerSerializer(cart,data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -272,12 +272,12 @@ class Order_pk_CBV(APIView):
 
     def get(self, request, pk):
         checkout = self.get_object(pk)
-        serializer = Check_outSerializer(checkout)
+        serializer = OrderSerializer(checkout)
         return Response(serializer.data)
 
     def put(self, request, pk):
         checkout = self.get_object(pk)
-        serializer = Check_outSerializer(checkout,data=request.data)
+        serializer = OrderSerializer(checkout,data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -314,7 +314,7 @@ class Product_viewset(viewsets.ModelViewSet):
 
 class Cart_Owner_Viewset (viewsets.ModelViewSet):
     queryset = Cart_Owner.objects.all()
-    serializer_class = CartSerializer
+    serializer_class = CartOwnerSerializer
     permission_classes = [UserPermission]
 
 
