@@ -14,6 +14,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .serializers import *
 from django.shortcuts import get_object_or_404
 from django.http import Http404
+from django.shortcuts import get_object_or_404
+
 from .permissons import *
 import requests
 
@@ -288,6 +290,34 @@ class Order_pk_CBV(APIView):
         checkout.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def checkout(self, request, pk=None):
+        product = self.get_object()
+        qty = request.data.get('qty')
+
+        if qty and product.qty >= qty:
+            product.qty -= qty
+            product.save()
+            return Response('Product checked out successfully!')
+        else:
+            return Response('Insufficient quantity', status=status.HTTP_400_BAD_REQUEST)
+
+# def checkout(request, product_pk):
+#         try:
+#             product = Products.objects.get(pk=product_pk)
+#         except Products.DoesNotExist:
+#             return Response("product does not exist", status=status.HTTP_404_NOT_FOUND)
+#
+#         if request.method == "POST":
+#             qty = int(request.POST.get("qty"))
+#             if qty > product.qty:
+#                 error_message = f'there are only {product.qty} item in stock'
+#             else:
+#                 product.qty -= qty
+#                 product.save()
+#                 success_message = f"Successfully checked out {qty} {product.name}(s)"
+#                 return Response("product_detail", pk=product.pk)
+#         return render (request ,
+
 
 class User_viewset (viewsets.ModelViewSet):
     queryset=users.objects.all()
@@ -324,7 +354,7 @@ class Cart_Detail_Viewset(viewsets.ModelViewSet):
     permission_classes = [UserPermission]
 
 
-class Check_Out_Viewset(viewsets.ModelViewSet):
+class Order_Viewset(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [UserPermission]

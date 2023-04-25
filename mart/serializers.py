@@ -99,3 +99,4 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def get_deliver_to(self,obj):
         return obj.deliver_to()
+

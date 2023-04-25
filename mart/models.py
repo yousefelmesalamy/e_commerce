@@ -166,7 +166,7 @@ class Products(models.Model):
 
 class Cart_Owner (models.Model):
 
-    user = models.ForeignKey(users, on_delete=models.CASCADE,verbose_name="Cart Owner")
+    user = models.ForeignKey(users, on_delete=models.CASCADE, verbose_name="Cart Owner")
     # def get_products(self):
     #     return ",".join([str(p) for p in self.products.all()]) #iterate
     def __str__(self):
@@ -187,7 +187,6 @@ class Cart_detail (models.Model):
 
 class Order (models.Model):
     cart = models.ForeignKey(Cart_Owner, on_delete=models.CASCADE)
-
 
 
     def num_of_products(self):

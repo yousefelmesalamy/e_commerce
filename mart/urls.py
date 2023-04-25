@@ -8,7 +8,7 @@ router.register('users', User_viewset)
 router.register('products', Product_viewset)
 router.register('cart/owner', Cart_Owner_Viewset)
 router.register('cart/detail', Cart_Detail_Viewset)
-router.register('checkout', Check_Out_Viewset)
+router.register('checkout', Order_Viewset)
 
 
 
